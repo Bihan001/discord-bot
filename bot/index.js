@@ -1,6 +1,9 @@
 const Discord = require('discord.js');
 const { playAudio, pauseAudio, resumeAudio, stopAudio } = require('./player');
+const { getRandomImage, audioPlay } = require('./misc-functions');
 const { DISCORD_BOT_TOKEN, BOT_PREFIX } = require('../utilities');
+const commands = require('./commands');
+require('dotenv').config();
 
 const intents = Object.keys(Discord.Intents.FLAGS);
 const client = new Discord.Client({ restTimeOffset: 0, intents, partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
@@ -15,21 +18,30 @@ const initializeBot = async () => {
     if (msg.author.bot) return;
     const [prefix, command, data, ...rest] = msg.content.split(' ').map((x) => x.trim());
     if (prefix !== BOT_PREFIX) return;
+    const fullString = data + ' ' + rest.join(' ');
     try {
-      if (command === 'poke') {
-        return msg.channel.send('konoo');
-      }
-      if (command === 'pause') {
-        return pauseAudio();
-      }
-      if (command === 'resume') {
-        return resumeAudio();
-      }
-      if (command === 'stop') {
-        return stopAudio();
-      }
-      if (command === 'play') {
-        playAudio(data, msg);
+      switch (command) {
+        case commands.play:
+          playAudio(msg, fullString);
+          break;
+        case commands.pause:
+          pauseAudio();
+          break;
+        case commands.resume:
+          resumeAudio();
+          break;
+        case commands.stop:
+          stopAudio();
+          break;
+        case commands.poke:
+          msg.channel.send({ content: 'Konoo' });
+          break;
+        case commands.randomImage:
+          getRandomImage(msg, data, rest[0]);
+          break;
+        case commands.audioPlay:
+          audioPlay(msg, fullString);
+          break;
       }
     } catch (err) {
       return msg.reply(err.message);
@@ -40,7 +52,7 @@ const initializeBot = async () => {
   client.on('error', console.error);
 
   client
-    .login(DISCORD_BOT_TOKEN)
+    .login(process.env.DISCORD_BOT_TOKEN)
     .then((res) => console.log(res))
     .catch((err) => console.log(err));
 };

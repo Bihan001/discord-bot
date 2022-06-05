@@ -1,4 +1,6 @@
 module.exports = {
-  DISCORD_BOT_TOKEN: process.env.DISCORD_BOT_TOKEN,
-  BOT_PREFIX: 'kono!',
+  BOT_PREFIX: '!',
+  audios: {
+    waku: 'https://www.youtube.com/shorts/or3gNYEh2Zg',
+  },
 };
