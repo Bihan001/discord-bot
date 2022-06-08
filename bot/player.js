@@ -12,8 +12,6 @@ const playAudio = async (msg, data) => {
     const videos = await youtubeSearch.search(url); // if the data is not url, search it on youtube and get the first result
     if (videos.length === 0) throw new Error('No video found');
     url = videos[0].snippet.url;
-    console.log(url);
-    console.log(data);
   }
   const voiceInstance = msg.member.voice;
   if (!voiceInstance.channelId) throw new Error('Join a voice channel first konooo');
